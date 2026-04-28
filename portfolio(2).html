@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Shantashree Nerekar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,600;1,300;1,600&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink:    #0c0c0b;
+  --paper:  #f7f6f2;
+  --rule:   rgba(12,12,11,0.18);
+  --serif:  'Cormorant', Georgia, serif;
+  --sans:   'Syne', sans-serif;
+  --ease:   cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-theme="dark"] {
+  --ink:   #ede9e3;
+  --paper: #0e0e0d;
+  --rule:  rgba(237,233,227,0.15);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 400;
+  cursor: none;
+  overflow-x: hidden;
+  transition: background 0.4s var(--ease), color 0.4s var(--ease);
+}
+
+/* ─── Shared toggle style ─── */
+.toggle-btn {
+  background: none;
+  border: 1px solid currentColor;
+  color: var(--ink);
+  cursor: none;
+  width: 2rem; height: 2rem;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0.45;
+  transition: opacity 0.2s, border-color 0.4s, color 0.4s;
+  flex-shrink: 0;
+}
+.toggle-btn:hover { opacity: 1; }
+.toggle-btn svg { width: 0.85rem; height: 0.85rem; pointer-events: none; }
+
+/* ─── Custom cursor ─── */
+#cursor {
+  position: fixed;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--ink);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.08s, width 0.25s var(--ease), height 0.25s var(--ease), background 0.4s;
+  mix-blend-mode: difference;
+}
+#cursor.big { width: 64px; height: 64px; }
+
+/* ─── Shared nav base ─── */
+.site-nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 200;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 2.5rem;
+  background: var(--paper);
+  transition: background 0.4s var(--ease);
+}
+.nav-name {
+  font-family: var(--sans);
+  font-size: 0.75rem; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase;
+}
+.nav-right { display: flex; align-items: center; gap: 2rem; }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a {
+  font-size: 0.75rem; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; color: var(--ink);
+  opacity: 0.45; transition: opacity 0.2s;
+}
+.nav-links a:hover { opacity: 1; }
+
+/* ─── Hamburger ─── */
+.nav-hamburger {
+  display: none; flex-direction: column; justify-content: center; gap: 5px;
+  background: none; border: none; cursor: none; padding: 4px; z-index: 210;
+}
+.nav-hamburger span {
+  display: block; width: 22px; height: 1.5px; background: var(--ink);
+  transition: transform 0.3s var(--ease), opacity 0.3s; transform-origin: center;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ─── Mobile drawer ─── */
+.nav-drawer {
+  display: none; position: fixed; inset: 0; background: var(--paper);
+  z-index: 205; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2.5rem; transition: background 0.4s var(--ease);
+}
+.nav-drawer.open { display: flex; }
+.nav-drawer .nav-links { flex-direction: column; align-items: center; gap: 2rem; }
+.nav-drawer .nav-links a { font-size: 1.25rem; letter-spacing: 0.12em; opacity: 0.6; }
+.nav-drawer .nav-links a:hover { opacity: 1; }
+
+/* ─── Section foundation ─── */
+.sec { position: relative; overflow: hidden; border-top: 1px solid var(--ink); }
+.paint {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  opacity: 0; transition: opacity 0.5s var(--ease); will-change: background;
+}
+.sec:hover .paint, .proj:hover .paint { opacity: 1; }
+.rel { position: relative; z-index: 1; }
+
+/* ─── Hero ─── */
+#hero {
+  min-height: 38vh; display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 1.5rem 2.5rem 2.5rem;
+}
+.hero-kicker {
+  font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+  opacity: 0.4; margin-bottom: 1.5rem; font-weight: 500;
+}
+.hero-h1 {
+  font-family: var(--sans); font-size: clamp(1.05rem, 1.35vw, 1.2rem);
+  font-weight: 400; line-height: 1.7; letter-spacing: 0.01em;
+  margin-bottom: 3rem; opacity: 0.65; max-width: 60ch;
+}
+.hero-foot {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  border-top: 1px solid var(--rule); padding-top: 1rem;
+}
+.hero-bio { font-size: clamp(0.8rem, 1.4vw, 0.95rem); line-height: 1.75; max-width: 44ch; opacity: 0.6; }
+.hero-scroll {
+  font-family: var(--serif); font-style: italic; font-weight: 300;
+  font-size: 0.9rem; opacity: 0.35; animation: bob 2.5s ease-in-out infinite;
+}
+@keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
+
+/* ─── Work bar ─── */
+.work-bar {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--ink);
+}
+.bar-label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; opacity: 0.4; }
+.bar-count { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 0.9rem; opacity: 0.5; }
+
+/* ─── Project rows ─── */
+.proj {
+  display: grid; grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--ink);
+  position: relative; overflow: hidden;
+  cursor: none; transition: background 0.3s;
+}
+.proj-l {
+  padding: 2.75rem 2.5rem; border-right: 1px solid var(--ink);
+  position: relative; z-index: 1;
+}
+.proj-r {
+  padding: 2.75rem 2.5rem; display: flex; flex-direction: column;
+  align-items: flex-start; justify-content: space-between; position: relative; z-index: 1;
+}
+.proj-num { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 0.75rem; opacity: 0.3; margin-bottom: 0.4rem; }
+.proj-title {
+  font-family: var(--serif); font-weight: 600;
+  font-size: clamp(1.75rem, 4.5vw, 3.5rem);
+  line-height: 0.95; letter-spacing: -0.015em; margin-bottom: 1.25rem;
+  position: relative; display: inline-block;
+}
+.proj-title::after {
+  content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+  height: 1.5px; background: var(--ink);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.38s var(--ease);
+}
+.proj:hover .proj-title::after { transform: scaleX(1); }
+.proj-desc { font-size: 0.85rem; line-height: 1.8; opacity: 0.5; max-width: 36ch; font-weight: 400; }
+.proj-chips { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.chip {
+  font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  border: 1px solid currentColor; padding: 0.2rem 0.65rem; border-radius: 99px; opacity: 0.4;
+}
+.proj-yr { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 1rem; opacity: 0.35; }
+.proj-view-hint {
+  font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+  font-weight: 500; opacity: 0; transition: opacity 0.25s var(--ease);
+  margin-top: 0.9rem; display: flex; align-items: center; gap: 0.4rem;
+}
+.proj:hover .proj-view-hint { opacity: 0.45; }
+
+/* ─── About ─── */
+#about { display: grid; grid-template-columns: 1fr 1fr; }
+.about-l { padding: 5rem 2.5rem; border-right: 1px solid var(--ink); position: relative; z-index: 1; }
+.about-r { padding: 5rem 2.5rem; position: relative; z-index: 1; }
+.sec-kicker { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; opacity: 0.4; margin-bottom: 2.5rem; display: block; }
+.about-p { font-size: 0.95rem; line-height: 1.85; opacity: 0.6; max-width: 46ch; }
+.about-p + .about-p { margin-top: 1.25rem; }
+.cap-list { list-style: none; }
+.cap-item { display: flex; justify-content: space-between; align-items: baseline; padding: 1.1rem 0; border-bottom: 1px solid var(--rule); font-size: 0.9rem; font-weight: 400; }
+.cap-item:first-child { border-top: 1px solid var(--rule); }
+.cap-note { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 0.85rem; opacity: 0.4; }
+
+/* ─── Contact ─── */
+#contact { min-height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 6rem 2.5rem; }
+.contact-in { position: relative; z-index: 1; }
+.contact-kicker { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; opacity: 0.4; margin-bottom: 1.5rem; display: block; }
+.contact-h { font-family: var(--serif); font-weight: 600; font-size: clamp(4rem, 12vw, 11rem); line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 2.5rem; }
+.contact-h em { font-weight: 300; font-style: italic; display: block; }
+.contact-link { font-size: 1rem; font-weight: 500; letter-spacing: 0.04em; text-decoration: none; color: var(--ink); border-bottom: 1.5px solid currentColor; padding-bottom: 3px; transition: opacity 0.2s; }
+.contact-link:hover { opacity: 0.5; }
+
+/* ─── Footer ─── */
+footer, .pp-footer {
+  border-top: 1px solid var(--ink); display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 2.5rem; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; opacity: 0.35;
+}
+
+/* ─── Page load fade ─── */
+.fade-in { opacity: 0; transform: translateY(18px); animation: fadeUp 0.9s var(--ease) forwards; }
+@keyframes fadeUp { to { opacity: 1; transform: none; } }
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.25s; }
+.delay-3 { animation-delay: 0.4s; }
+
+
+/* ══════════════════════════════════════════
+   PROJECT DETAIL PAGES
+══════════════════════════════════════════ */
+
+.project-page {
+  display: none;
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  transition: background 0.4s var(--ease), color 0.4s var(--ease);
+}
+.project-page.pp-visible {
+  display: block;
+  animation: ppEnter 0.5s var(--ease) forwards;
+}
+@keyframes ppEnter { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+
+/* ── Project nav ── */
+.pp-nav {
+  position: sticky; top: 0;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--ink);
+  background: var(--paper); z-index: 200;
+  transition: background 0.4s var(--ease);
+}
+.back-btn {
+  background: none; border: none; color: var(--ink);
+  font-family: var(--sans); font-size: 0.75rem;
+  font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: none; opacity: 0.45; padding: 0;
+  display: flex; align-items: center; gap: 0.55rem;
+  transition: opacity 0.2s, gap 0.2s var(--ease);
+}
+.back-btn:hover { opacity: 1; gap: 0.85rem; }
+.back-arrow { transition: transform 0.2s var(--ease); display: inline-block; }
+.back-btn:hover .back-arrow { transform: translateX(-4px); }
+.pp-nav-centre { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.3; font-weight: 500; }
+.pp-nav-right { display: flex; align-items: center; }
+
+/* ── Project hero ── */
+.pp-hero {
+  padding: 5.5rem 2.5rem 4rem; border-bottom: 1px solid var(--ink);
+  position: relative; overflow: hidden;
+}
+.pp-hero-paint { position: absolute; inset: 0; pointer-events: none; opacity: 0.3; }
+.pp-num { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 0.8rem; opacity: 0.3; display: block; margin-bottom: 1.5rem; }
+.pp-title {
+  font-family: var(--serif); font-weight: 600;
+  font-size: clamp(3.5rem, 8vw, 9rem);
+  line-height: 0.9; letter-spacing: -0.025em; margin-bottom: 3.5rem; position: relative; z-index: 1;
+}
+.pp-title em { font-weight: 300; font-style: italic; }
+.pp-meta { display: flex; gap: 4rem; flex-wrap: wrap; position: relative; z-index: 1; }
+.pp-meta-label { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.35; display: block; margin-bottom: 0.4rem; font-weight: 500; }
+.pp-meta-val { font-size: 0.88rem; font-weight: 400; opacity: 0.75; }
+
+/* ── Image blocks ── */
+.pp-img-full {
+  width: 100%; aspect-ratio: 16 / 7;
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 1.5rem 2.5rem; border-bottom: 1px solid var(--ink);
+  position: relative; overflow: hidden;
+}
+.pp-img-full.tall { aspect-ratio: 16 / 9; }
+.pp-img-label { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 0.8rem; opacity: 0.45; position: relative; z-index: 1; }
+.pp-img-idx { font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 500; opacity: 0.3; position: relative; z-index: 1; }
+
+.pp-img-grid { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--ink); }
+.pp-img-grid .pp-img-full { aspect-ratio: 4/3; border-bottom: none; }
+.pp-img-grid .pp-img-full:first-child { border-right: 1px solid var(--ink); }
+
+.pp-img-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; border-bottom: 1px solid var(--ink); }
+.pp-img-grid-3 .pp-img-full { aspect-ratio: 3/4; border-bottom: none; }
+.pp-img-grid-3 .pp-img-full:not(:last-child) { border-right: 1px solid var(--ink); }
+
+/* ── Text section ── */
+.pp-section {
+  display: grid; grid-template-columns: 1fr 2fr; gap: 4rem;
+  padding: 4.5rem 2.5rem; border-bottom: 1px solid var(--ink);
+}
+.pp-section-label { font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.35; font-weight: 500; padding-top: 0.2rem; }
+.pp-section-body p { font-size: 0.95rem; line-height: 1.9; opacity: 0.62; }
+.pp-section-body p + p { margin-top: 1.25rem; }
+.pp-section-body h3 {
+  font-family: var(--serif); font-weight: 600;
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  line-height: 1.1; letter-spacing: -0.01em; margin-bottom: 0.9rem; margin-top: 2.5rem;
+}
+.pp-section-body h3:first-child { margin-top: 0; }
+
+.pp-pullquote {
+  font-family: var(--serif); font-style: italic; font-weight: 300;
+  font-size: clamp(1.3rem, 3vw, 2.5rem); line-height: 1.3;
+  opacity: 0.65; margin: 2rem 0; padding-left: 1.75rem; border-left: 2px solid var(--rule);
+}
+
+/* ── Next project ── */
+.pp-next {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 3rem 2.5rem; border-top: 1px solid var(--ink);
+  cursor: none; text-decoration: none; color: var(--ink);
+  position: relative; overflow: hidden;
+}
+.pp-next .paint { opacity: 0; transition: opacity 0.4s var(--ease); }
+.pp-next:hover .paint { opacity: 1; }
+.pp-next-label { font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.35; font-weight: 500; margin-bottom: 0.5rem; display: block; }
+.pp-next-title { font-family: var(--serif); font-weight: 600; font-size: clamp(1.5rem, 3vw, 2.5rem); line-height: 1; position: relative; z-index: 1; }
+.pp-next-arrow { font-size: 1.5rem; opacity: 0.4; transition: transform 0.3s var(--ease), opacity 0.2s; position: relative; z-index: 1; }
+.pp-next:hover .pp-next-arrow { transform: translateX(10px); opacity: 0.9; }
+.pp-next-left { position: relative; z-index: 1; }
+
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .site-nav, .pp-nav { padding: 1.1rem 2rem; }
+  #hero { padding: 1.25rem 2rem 2rem; }
+  .work-bar, .pp-nav { padding: 1.1rem 2rem; }
+  .proj-l, .proj-r { padding: 2.25rem 2rem; }
+  .about-l, .about-r { padding: 4rem 2rem; }
+  #contact { padding: 5rem 2rem; }
+  footer, .pp-footer { padding: 1.1rem 2rem; }
+  .pp-hero { padding: 4.5rem 2rem 3rem; }
+  .pp-section { padding: 3.5rem 2rem; gap: 2.5rem; }
+  .pp-img-full { padding: 1.25rem 2rem; }
+  .pp-next { padding: 2.5rem 2rem; }
+}
+
+@media (max-width: 768px) {
+  body { cursor: auto; }
+  #cursor { display: none; }
+
+  .site-nav { padding: 1rem 1.25rem; border-bottom: 1px solid var(--rule); }
+  .nav-right { display: none; }
+  .nav-hamburger { display: flex; }
+
+  #hero { min-height: 55vh; padding: 5rem 1.25rem 2rem; justify-content: flex-end; }
+  .hero-h1 { font-size: clamp(0.95rem, 3.5vw, 1.1rem); margin-bottom: 2rem; }
+  .hero-foot { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .hero-scroll { align-self: flex-end; }
+
+  .work-bar { padding: 1rem 1.25rem; }
+  .proj { grid-template-columns: 1fr; }
+  .proj-l { padding: 2rem 1.25rem 1.5rem; border-right: none; border-bottom: 1px solid var(--ink); }
+  .proj-r { padding: 1.5rem 1.25rem 2rem; }
+  .proj-title { font-size: clamp(2rem, 8vw, 3rem); }
+
+  #about { grid-template-columns: 1fr; }
+  .about-l { padding: 3rem 1.25rem 2.5rem; border-right: none; border-bottom: 1px solid var(--ink); }
+  .about-r { padding: 2.5rem 1.25rem 3rem; }
+  #contact { padding: 4rem 1.25rem; min-height: 50vh; }
+  .contact-link { font-size: 0.85rem; }
+  footer { flex-direction: column; gap: 0.4rem; text-align: center; padding: 1.25rem; }
+
+  .pp-nav { padding: 1rem 1.25rem; position: sticky; }
+  .pp-nav-centre { display: none; }
+  .pp-hero { padding: 3.5rem 1.25rem 2.5rem; }
+  .pp-title { font-size: clamp(2.5rem, 10vw, 5rem); margin-bottom: 2rem; }
+  .pp-meta { gap: 1.75rem; }
+
+  .pp-img-full { aspect-ratio: 4/3; padding: 1rem 1.25rem; }
+  .pp-img-full.tall { aspect-ratio: 1/1; }
+  .pp-img-grid { grid-template-columns: 1fr; }
+  .pp-img-grid .pp-img-full { border-right: none !important; border-bottom: 1px solid var(--ink) !important; }
+  .pp-img-grid-3 { grid-template-columns: 1fr; }
+  .pp-img-grid-3 .pp-img-full { aspect-ratio: 4/3; border-right: none !important; border-bottom: 1px solid var(--ink) !important; }
+
+  .pp-section { grid-template-columns: 1fr; gap: 1.25rem; padding: 2.5rem 1.25rem; }
+  .pp-pullquote { font-size: clamp(1.1rem, 5vw, 1.6rem); padding-left: 1.1rem; }
+  .pp-next { padding: 2rem 1.25rem; }
+  .pp-footer { flex-direction: column; gap: 0.4rem; text-align: center; padding: 1.25rem; }
+}
+
+@media (max-width: 480px) {
+  #hero { padding-top: 4.5rem; }
+  .hero-h1 { font-size: 0.9rem; line-height: 1.65; }
+  .proj-l, .proj-r { padding-left: 1rem; padding-right: 1rem; }
+  .proj-title { font-size: clamp(1.75rem, 9vw, 2.5rem); }
+  .about-l, .about-r { padding-left: 1rem; padding-right: 1rem; }
+  .contact-h { font-size: clamp(3rem, 15vw, 5rem); }
+  .contact-link { font-size: 0.78rem; word-break: break-all; }
+  .pp-nav { padding: 0.9rem 1rem; }
+  .pp-hero { padding: 3rem 1rem 2rem; }
+  .pp-section { padding: 2rem 1rem; }
+  .pp-img-full { padding: 0.85rem 1rem; }
+  .pp-next { padding: 1.75rem 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- ════════════════════════════════════
+     MAIN PORTFOLIO VIEW
+════════════════════════════════════ -->
+<div id="main-view">
+
+  <nav class="site-nav fade-in">
+    <span class="nav-name">Shantashree Nerekar</span>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#about">Info</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <button class="toggle-btn theme-toggle-btn" aria-label="Toggle dark mode">
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="nav-drawer" id="nav-drawer">
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">Info</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="toggle-btn theme-toggle-btn" aria-label="Toggle dark mode">
+      <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+
+  <!-- Hero -->
+  <section class="sec" id="hero" data-color="#f5d76e">
+    <div class="paint" id="hero-paint"></div>
+    <div class="rel">
+      <p class="hero-kicker fade-in delay-1">Visual &amp; Product designer — 2026</p>
+      <h1 class="hero-h1 fade-in delay-2">
+        Shantashree is a Product and Visual Designer working in the areas
+        of User Experience Design, Publication Design, Type, and Mix-Media.
+      </h1>
+      <div class="hero-foot fade-in delay-3">
+        <p class="hero-bio">Currently open for projects.</p>
+        <span class="hero-scroll">Scroll ↓</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Work -->
+  <section class="sec" id="work">
+    <div class="paint" id="work-paint"></div>
+    <div class="rel">
+      <div class="work-bar">
+        <span class="bar-label">Projects</span>
+        <span class="bar-count">04 Projects</span>
+      </div>
+    </div>
+
+    <div class="proj" data-color="#f7b89a" onclick="openProject('caravan')">
+      <div class="paint"></div>
+      <div class="proj-l">
+        <p class="proj-num">01 —</p>
+        <h2 class="proj-title">The Caravan<br>Magazine</h2>
+        <div class="proj-chips">
+          <span class="chip">Print</span><span class="chip">Publication</span><span class="chip">Typography</span>
+        </div>
+      </div>
+      <div class="proj-r">
+        <p class="proj-desc">A reimagined layout system for The Caravan's long-form journalism. Focused on typographic hierarchy, grid rhythm, and the tactile quality of print.</p>
+        <div><span class="proj-yr">2025</span><p class="proj-view-hint">View Project →</p></div>
+      </div>
+    </div>
+
+    <div class="proj" data-color="#a8d8e8" onclick="openProject('ifa')">
+      <div class="paint"></div>
+      <div class="proj-l">
+        <p class="proj-num">02 —</p>
+        <h2 class="proj-title">IFA —<br>Unbound &amp; Untethered</h2>
+        <div class="proj-chips">
+          <span class="chip">Research</span><span class="chip">Publication</span><span class="chip">Visual Design</span>
+        </div>
+      </div>
+      <div class="proj-r">
+        <p class="proj-desc">A research-led publication exploring themes of freedom and belonging. Combines archival imagery with expressive visual design across 80 pages.</p>
+        <div><span class="proj-yr">2025</span><p class="proj-view-hint">View Project →</p></div>
+      </div>
+    </div>
+
+    <div class="proj" data-color="#b5d5b5" onclick="openProject('gpay')">
+      <div class="paint"></div>
+      <div class="proj-l">
+        <p class="proj-num">03 —</p>
+        <h2 class="proj-title">Google<br>Pay</h2>
+        <div class="proj-chips">
+          <span class="chip">Interaction Design</span><span class="chip">Product</span><span class="chip">Research</span>
+        </div>
+      </div>
+      <div class="proj-r">
+        <p class="proj-desc">Redesigning key flows within Google Pay to reduce friction for first-time users in India. Grounded in field research and iterative prototyping.</p>
+        <div><span class="proj-yr">2025</span><p class="proj-view-hint">View Project →</p></div>
+      </div>
+    </div>
+
+    <div class="proj" data-color="#d4b8e0" onclick="openProject('product')">
+      <div class="paint"></div>
+      <div class="proj-l">
+        <p class="proj-num">04 —</p>
+        <h2 class="proj-title">Product<br>Design</h2>
+        <div class="proj-chips">
+          <span class="chip">UX / UI</span><span class="chip">Prototyping</span><span class="chip">Research</span>
+        </div>
+      </div>
+      <div class="proj-r">
+        <p class="proj-desc">End-to-end product design spanning user research, wireframing, and high-fidelity UI. Built with a focus on accessibility and intuitive interaction.</p>
+        <div><span class="proj-yr">2025</span><p class="proj-view-hint">View Project →</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="sec" id="about" data-color="#f5c9a0">
+    <div class="paint" id="about-paint"></div>
+    <div class="about-l">
+      <span class="sec-kicker">Info</span>
+      <p class="about-p">Shantashree Nerekar is a visual designer, predominantly working in areas such as user experience design, branding, publication design, print and type. She loves working on projects that are multi-disciplinary.</p>
+      <p class="about-p">Her interests apart from design are cooking a big meal, crocheting, knitting and recently, baking. She also enjoys journaling and sketch-noting and has a big appetite for all things cats!</p>
+      <p class="about-p">Currently open to freelance projects and full-time opportunities. She is based in Pune, India.</p>
+    </div>
+    <div class="about-r">
+      <span class="sec-kicker">Capabilities</span>
+      <ul class="cap-list">
+        <li class="cap-item"><span class="cap-name">Visual Design</span><span class="cap-note">Expert</span></li>
+        <li class="cap-item"><span class="cap-name">Publication Design</span><span class="cap-note">Expert</span></li>
+        <li class="cap-item"><span class="cap-name">Brand Identity</span><span class="cap-note">Advanced</span></li>
+        <li class="cap-item"><span class="cap-name">Creative Direction</span><span class="cap-note">Advanced</span></li>
+        <li class="cap-item"><span class="cap-name">Product Design</span><span class="cap-note">Proficient</span></li>
+        <li class="cap-item"><span class="cap-name">Motion Design</span><span class="cap-note">Proficient</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="sec" id="contact" data-color="#f4a7b9">
+    <div class="paint" id="contact-paint"></div>
+    <div class="contact-in">
+      <span class="contact-kicker">You made it through! &nbsp;—&nbsp; Let's work together</span>
+      <h2 class="contact-h">Say<br><em>Hello.</em></h2>
+      <a class="contact-link" href="mailto:shantashreen@gmail.com">shantashreen@gmail.com</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>Shantashree Nerekar — Portfolio</span>
+    <span>© 2026</span>
+  </footer>
+</div><!-- /main-view -->
+
+
+<!-- ════════════════════════════════════
+     01 — THE CARAVAN MAGAZINE
+════════════════════════════════════ -->
+<div class="project-page" id="pp-caravan">
+  <nav class="pp-nav">
+    <button class="back-btn" onclick="closeProject()"><span class="back-arrow">←</span> All Work</button>
+    <span class="pp-nav-centre">01 — The Caravan Magazine</span>
+    <div class="pp-nav-right">
+      <button class="toggle-btn theme-toggle-btn" aria-label="Toggle dark mode">
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="pp-hero">
+    <div class="pp-hero-paint" style="background: radial-gradient(ellipse 80% 60% at 60% 40%, #f7b89a66 0%, transparent 70%);"></div>
+    <span class="pp-num">01 —</span>
+    <h1 class="pp-title">The Caravan<br><em>Magazine</em></h1>
+    <div class="pp-meta">
+      <div class="pp-meta-item"><span class="pp-meta-label">Discipline</span><span class="pp-meta-val">Print · Publication · Typography</span></div>
+      <div class="pp-meta-item"><span class="pp-meta-label">Year</span><span class="pp-meta-val">2025</span></div>
+      <div class="pp-meta-item"><span class="pp-meta-label">Type</span><span class="pp-meta-val">Personal Project</span></div>
+    </div>
+  </div>
+
+  <div class="pp-img-full" style="background: #f7b89a1a;">
+    <span class="pp-img-label">Cover &amp; Master Spread</span>
+    <span class="pp-img-idx">Visual 01 — 02</span>
+  </div>
+
+  <div class="pp-section">
+    <span class="pp-section-label">Overview</span>
+    <div class="pp-section-body">
+      <p>The Caravan is India's foremost magazine of long-form journalism and narrative non-fiction. This project reimagined its visual identity — rebuilding the layout system from the ground up to honour the density and rigour of its writing.</p>
+      <p>The brief was self-initiated: to find a typographic and spatial language that felt contemporary without losing the tactile gravitas that print demands. Every decision, from column widths to leading ratios, was made in service of extended reading.</p>
+      <div class="pp-pullquote">"Typography at the scale of long-form journalism must breathe — but it must also hold."</div>
+    </div>
+  </div>
+
+  <div class="pp-img-grid">
+    <div class="pp-img-full tall" style="background: #f7b89a28;"><span class="pp-img-label">Feature Opener — Issue Layout</span><span class="pp-img-idx">Visual 03</span></div>
+    <div class="pp-img-full tall" style="background: #f7b89a14;"><span class="pp-img-label">Body Copy &amp; Grid System</span><span class="pp-img-idx">Visual 04</span></div>
+  </div>
+
+  <div class="pp-section">
+    <span class="pp-section-label">Approach</span>
+    <div class="pp-section-body">
+      <h3>Typographic System</h3>
+      <p>Two typefaces anchor the system: a contemporary grotesque for headlines and navigation, and a high-contrast serif for body text — chosen for its performance at small sizes across long passages.</p>
+      <p>A strict 6-column grid governs every spread. Section openers break it deliberately, using full-bleed image placements and oversized numeral folios to signal hierarchy without relying on colour.</p>
+      <h3>Grid &amp; Rhythm</h3>
+      <p>Baseline grids were locked to 14pt — tight enough to maintain density, loose enough for images to breathe. Margins were widened beyond conventional magazine standards, giving the long-form text the white space it deserves.</p>
+    </div>
+  </div>
+
+  <div class="pp-img-grid-3">
+    <div class="pp-img-full" style="background: #f7b89a22;"><span class="pp-img-label">Pull-quote Treatment</span><span class="pp-img-idx">Visual 05</span></div>
+    <div class="pp-img-full" style="background: #f7b89a12;"><span class="pp-img-label">Caption System</span><span class="pp-img-idx">Visual 06</span></div>
+    <div class="pp-img-full" style="background: #f7b89a30;"><span class="pp-img-label">Section Divider</span><span class="pp-img-idx">Visual 07</span></div>
+  </div>
+
+  <div class="pp-section">
+    <span class="pp-section-label">Outcome</span>
+    <div class="pp-section-body">
+      <p>The redesign produced a coherent, scalable system — one that can accommodate the full range of The Caravan's editorial formats: the 10,000-word investigation, the photo essay, the short dispatch, and the back-of-book reviews.</p>
+      <p>The exercise reinforced a core belief: great publication design is invisible. It creates the conditions for reading without announcing itself.</p>
+    </div>
+  </div>
+
+  <div class="pp-next" onclick="openProject('ifa')">
+    <div class="paint" style="background: #a8d8e8;"></div>
+    <div class="pp-next-left"><span class="pp-next-label">Next Project</span><div class="pp-next-title">IFA — Unbound &amp; Untethered</div></div>
+    <span class="pp-next-arrow">→</span>
+  </div>
+  <div class="pp-footer"><span>Shantashree Nerekar — Portfolio</span><span>© 2026</span></div>
+</div>
+
+
+<!-- ════════════════════════════════════
+     02 — IFA
+════════════════════════════════════ -->
+<div class="project-page" id="pp-ifa">
+  <nav class="pp-nav">
+    <button class="back-btn" onclick="closeProject()"><span class="back-arrow">←</span> All Work</button>
+    <span class="pp-nav-centre">02 — IFA: Unbound &amp; Untethered</span>
+    <div class="pp-nav-right">
+      <button class="toggle-btn theme-toggle-btn" aria-label="Toggle dark mode">
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="pp-hero">
+    <div class="pp-hero-paint" style="background: radial-gradient(ellipse 80% 60% at 40% 50%, #a8d8e866 0%, transparent 70%);"></div>
+    <span class="pp-num">02 —</span>
+    <h1 class="pp-title">IFA —<br><em>Unbound &amp;<br>Untethered</em></h1>
+    <div class="pp-meta">
+      <div class="pp-meta-item"><span class="pp-meta-label">Discipline</span><span class="pp-meta-val">Research · Publication · Visual Design</span></div>
+      <div class="pp-meta-item"><span class="pp-meta-label">Year</span><span class="pp-meta-val">2025</span></div>
+      <div class="pp-meta-item"><span class="pp-meta-label">Pages</span><span class="pp-meta-val">80 pp.</span></div>
+    </div>
+  </div>
+
+  <div class="pp-img-full" style="background: #a8d8e81a;"><span class="pp-img-label">Publication Cover &amp; Opening Spread</span><span class="pp-img-idx">Visual 01 — 02</span></div>
+
+  <div class="pp-section">
+    <span class="pp-section-label">Overview</span>
+    <div class="pp-section-body">
+      <p>Unbound &amp; Untethered is an 80-page research publication produced for the India Foundation for the Arts (IFA). It explores how artists, thinkers, and practitioners have navigated freedom and belonging — across disciplines, geographies, and time.</p>
+      <p>The visual challenge: how to hold archival material alongside contemporary essay writing, without the design flattening either into mere illustration.</p>
+      <div class="pp-pullquote">"The archive should feel unearthed, not curated. The design must carry that tension."</div>
+    </div>
+  </div>
+
+  <div class="pp-img-grid">
+    <div class="pp-img-full tall" style="background: #a8d8e828;"><span class="pp-img-label">Archival Image Spread</span><span class="pp-img-idx">Visual 03</span></div>
+    <div class="pp-img-full tall" style="background: #a8d8e814;"><span class="pp-img-label">Essay Opener</span><span class="pp-img-idx">Visual 04</span></div>
+  </div>
+
+  <div class="pp-section">
+    <span class="pp-section-label">Process</span>
+    <div class="pp-section-body">
+      <h3>Research &amp; Visual Language</h3>
+      <p>The process began with an extensive audit of the archival material — photographs, handwritten letters, printed ephemera — to understand the tonal range of the content before a single layout was conceived.</p>
+      <p>A visual language emerged: raw-edged image placements, deliberate whitespace as expressive tool, and a type system that distinguished between voices — the scholar, the artist, the archivist — through weight and size alone.</p>
+      <h3>Expressive Layout</h3>
+      <p>Rather than imposing a rigid grid across all 80 pages, the layout system was designed to flex. Essay sections follow a strict two-column structure. Archival sections break free — images overlapping text blocks, captions running in the margins, pages given over entirely to a single document.</p>
+    </div>
+  </div>
+
+  <div class="pp-img-grid-3">
+    <div class="pp-img-full" style="background: #a8d8e81e;"><span class="pp-img-label">Document Spread</span><span class="pp-img-idx">Visual 05</span></div>
+    <div class="pp-img-full" style="background: #a8d8e830;"><span class="pp-img-label">Annotation Detail</span><span class="pp-img-idx">Visual 06</span></div>
+    <div class="pp-img-full" style="background: #a8d8e812;"><span class="pp-img-label">Back Matter</span><span class="pp-img-idx">Visual 07</span></div>
+  </div>
+
+  <div class="pp-section">
+    <span class="pp-section-label">Outcome</span>
+    <div class="pp-section-body">
+      <p>The publication was received as a serious piece of design scholarship — one that used the visual form of the book not as a container but as an argument. The tension between rigour and expressiveness became the work's defining quality.</p>
+      <p>Delivered as both a print edition and a digital PDF, the design was built to survive both formats without compromise.</p>
+    </div>
+  </div>
+
+  <div class="pp-next" onclick="openProject('gpay')">
+    <div class="paint" style="background: #b5d5b5;"></div>
+    <div class="pp-next-left"><span class="pp-next-label">Next Project</span><div class="pp-next-title">Google Pay</div></div>
+    <span class="pp-next-arrow">→</span>
+  </div>
+  <div class="pp-footer"><span>Shantashree Nerekar — Portfolio</span><span>© 2026</span></div>
+</div>
+
+
+<!-- ════════════════════════════════════
+     03 — GOOGLE PAY
+════════════════════════════════════ -->
+<div class="project-page" id="pp-gpay">
+  <nav class="pp-nav">
+    <button class="back-btn" onclick="closeProject()"><span class="back-arrow">←</span> All Work</button>
+    <span class="pp-nav-centre">03 — Google Pay</span>
+    <div class="pp-nav-right">
+      <button class="toggle-btn theme-toggle-btn" aria-label="Toggle dark mode">
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="pp-hero">
+    <div class="pp-hero-paint" style="background: radial-gradient(ellipse 80% 60% at 50% 40%, #b5d5b566 0%, transparent 70%);"></div>
+    <span class="pp-num">03 —</span>
+    <h1 class="pp-title">Google<br><em>Pay</em></h1>
+    <div class="pp-meta">
+      <div class="pp-meta-item"><span class="pp-meta-label">Discipline</span><span class="pp-meta-val">Interaction Design · Product · Research</span></div>
+      <div class="pp-meta-item"><span class="pp-meta-label">Year</span><span class="pp-meta-val">2025</span></div>
+      <div class="pp-meta-item"><span class="pp-meta-label">Platform</span><span class="pp-meta-val">Mobile — Android / iOS</span></div>
+    </div>
+  </div>
+
+  <div class="pp-img-full" style="background: #b5d5b51a;"><span class="pp-img-label">Onboarding Flow — Final Screens</span><span class="pp-img-idx">Visual 01 — 03</span></div>
+
+  <div class="pp-section">
+    <span class="pp-section-label">Overview</span>
+    <div class="pp-section-body">
+      <p>Google Pay in India has one of the highest first-time user drop-off rates in the payments category. This project targeted the onboarding and first-transaction flows — the critical 10 minutes in which a new user either commits to the app or abandons it.</p>
+      <p>The work was grounded in primary field research across three cities: Pune, Nagpur, and Aurangabad — spanning users from college students to small-business owners, many encountering UPI for the first time.</p>
+      <div class="pp-pullquote">"First-time users don't fear technology — they fear making a mistake they can't undo."</div>
+    </div>
+  </div>
+
+  <div class="pp-img-grid">
+    <div class="pp-img-full tall" style="background: #b5d5b528;"><span class="pp-img-label">Field Research — User Interviews</span><span class="pp-img-idx">Visual 04</span></div>
+    <div class="pp-img-full tall" style="background: #b5d5b514;"><span class="pp-img-label">Affinity Mapping &amp; Insights</span><span class="pp-img-idx">Visual 05</span></div>
+  </div>
+
+  <div class="pp-section">
+    <span class="pp-section-label">Process</span>
+    <div class="pp-section-body">
+      <h3>Research Findings</h3>
+      <p>Field research surfaced three dominant pain points: confusing UPI ID entry, anxiety around sending to wrong recipients, and no legible confirmation state before a transaction finalised. These weren't usability issues — they were trust issues.</p>
+      <h3>Design Decisions</h3>
+      <p>Key interventions included: a persistent "undo window" displayed immediately after a transaction is sent; real-name verification shown before the send confirmation; and a simplified first-run experience that walks users through a ₹1 test transaction before they send money to contacts.</p>
+    </div>
+  </div>
+
+  <div class="pp-img-grid-3">
+    <div class="pp-img-full" style="background: #b5d5b522;"><span class="pp-img-label">Wireframe — Send Flow</span><span class="pp-img-idx">Visual 06</span></div>
+    <div class="pp-img-full" style="background: #b5d5b514;"><span class="pp-img-label">High-Fidelity — Confirmation</span><span class="pp-img-idx">Visual 07</span></div>
+    <div class="pp-img-full" style="background: #b5d5b530;"><span class="pp-img-label">Prototype — Test Transaction</span><span class="pp-img-idx">Visual 08</span></div>
+  </div>
+
+  <div class="pp-section">
+    <span class="pp-section-label">Outcome</span>
+    <div class="pp-section-body">
+      <p>Prototype testing with 12 participants showed a significant reduction in hesitation time at the confirmation step, and zero instances of the "wrong recipient" anxiety that appeared consistently in baseline testing.</p>
+      <p>The project demonstrated that the most meaningful UX improvements in fintech aren't visual — they're about sequencing, feedback, and the language of trust.</p>
+    </div>
+  </div>
+
+  <div class="pp-next" onclick="openProject('product')">
+    <div class="paint" style="background: #d4b8e0;"></div>
+    <div class="pp-next-left"><span class="pp-next-label">Next Project</span><div class="pp-next-title">Product Design</div></div>
+    <span class="pp-next-arrow">→</span>
+  </div>
+  <div class="pp-footer"><span>Shantashree Nerekar — Portfolio</span><span>© 2026</span></div>
+</div>
+
+
+<!-- ════════════════════════════════════
+     04 — PRODUCT DESIGN
+════════════════════════════════════ -->
+<div class="project-page" id="pp-product">
+  <nav class="pp-nav">
+    <button class="back-btn" onclick="closeProject()"><span class="back-arrow">←</span> All Work</button>
+    <span class="pp-nav-centre">04 — Product Design</span>
+    <div class="pp-nav-right">
+      <button class="toggle-btn theme-toggle-btn" aria-label="Toggle dark mode">
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="pp-hero">
+    <div class="pp-hero-paint" style="background: radial-gradient(ellipse 80% 60% at 55% 45%, #d4b8e066 0%, transparent 70%);"></div>
+    <span class="pp-num">04 —</span>
+    <h1 class="pp-title">Product<br><em>Design</em></h1>
+    <div class="pp-meta">
+      <div class="pp-meta-item"><span class="pp-meta-label">Discipline</span><span class="pp-meta-val">UX / UI · Prototyping · Research</span></div>
+      <div class="pp-meta-item"><span class="pp-meta-label">Year</span><span class="pp-meta-val">2025</span></div>
+      <div class="pp-meta-item"><span class="pp-meta-label">Focus</span><span class="pp-meta-val">End-to-End Process</span></div>
+    </div>
+  </div>
+
+  <div class="pp-img-full" style="background: #d4b8e01a;"><span class="pp-img-label">Final UI — Key Screens</span><span class="pp-img-idx">Visual 01 — 04</span></div>
+
+  <div class="pp-section">
+    <span class="pp-section-label">Overview</span>
+    <div class="pp-section-body">
+      <p>A complete, end-to-end product design process — from initial discovery research through to a polished, handoff-ready high-fidelity prototype. The focus was on designing for accessibility and intuitive interaction patterns across a complex multi-step workflow.</p>
+      <p>The work demonstrates the full arc of product thinking: not just interface design, but the decisions that precede it — what to build, for whom, and why it will be used.</p>
+      <div class="pp-pullquote">"Good product design makes complex things feel simple — not by hiding complexity, but by sequencing it."</div>
+    </div>
+  </div>
+
+  <div class="pp-img-grid">
+    <div class="pp-img-full tall" style="background: #d4b8e028;"><span class="pp-img-label">User Research &amp; Journey Mapping</span><span class="pp-img-idx">Visual 05</span></div>
+    <div class="pp-img-full tall" style="background: #d4b8e014;"><span class="pp-img-label">Information Architecture</span><span class="pp-img-idx">Visual 06</span></div>
+  </div>
+
+  <div class="pp-section">
+    <span class="pp-section-label">Process</span>
+    <div class="pp-section-body">
+      <h3>Discovery &amp; Research</h3>
+      <p>Structured user interviews and competitive analysis identified gaps in the existing landscape. Journey mapping sessions surfaced the emotional arc of users — moments of delight, confusion, and abandonment.</p>
+      <h3>From Wireframes to High-Fidelity</h3>
+      <p>Low-fidelity wireframes were tested early with representative users, allowing structural problems to be solved before visual design began. The high-fidelity UI was built with a component library that prioritised accessibility: minimum contrast ratios of 4.5:1, focus states for keyboard navigation, and touch targets sized to WCAG 2.1 AA standards.</p>
+    </div>
+  </div>
+
+  <div class="pp-img-grid-3">
+    <div class="pp-img-full" style="background: #d4b8e01e;"><span class="pp-img-label">Component Library</span><span class="pp-img-idx">Visual 07</span></div>
+    <div class="pp-img-full" style="background: #d4b8e030;"><span class="pp-img-label">Prototype — Core Flow</span><span class="pp-img-idx">Visual 08</span></div>
+    <div class="pp-img-full" style="background: #d4b8e012;"><span class="pp-img-label">Accessibility Annotations</span><span class="pp-img-idx">Visual 09</span></div>
+  </div>
+
+  <div class="pp-section">
+    <span class="pp-section-label">Outcome</span>
+    <div class="pp-section-body">
+      <p>The final deliverable included a fully annotated Figma prototype, a component library with 60+ components, and a handoff document covering spacing, motion, and interaction specifications.</p>
+      <p>The project reinforced the principle that accessibility is not a constraint on good design — it is the measure of it.</p>
+    </div>
+  </div>
+
+  <div class="pp-next" onclick="openProject('caravan')">
+    <div class="paint" style="background: #f7b89a;"></div>
+    <div class="pp-next-left"><span class="pp-next-label">Back to First Project</span><div class="pp-next-title">The Caravan Magazine</div></div>
+    <span class="pp-next-arrow">→</span>
+  </div>
+  <div class="pp-footer"><span>Shantashree Nerekar — Portfolio</span><span>© 2026</span></div>
+</div>
+
+
+<script>
+(function () {
+
+  /* ── Theme (all buttons, across all pages) ── */
+  const root = document.documentElement;
+  let isDark;
+
+  function applyTheme(dark) {
+    root.setAttribute('data-theme', dark ? 'dark' : 'light');
+    document.querySelectorAll('.icon-sun').forEach(el  => el.style.display = dark ? 'block' : 'none');
+    document.querySelectorAll('.icon-moon').forEach(el => el.style.display = dark ? 'none'  : 'block');
+  }
+
+  const saved = localStorage.getItem('theme');
+  isDark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(isDark);
+
+  document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      isDark = !isDark;
+      applyTheme(isDark);
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+  });
+
+  /* ── Mobile hamburger ── */
+  const hamburger = document.getElementById('nav-hamburger');
+  const drawer    = document.getElementById('nav-drawer');
+
+  hamburger.addEventListener('click', () => {
+    const open = drawer.classList.toggle('open');
+    hamburger.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  drawer.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      drawer.classList.remove('open');
+      hamburger.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+
+  /* ── Project routing ── */
+  const projectTitles = {
+    caravan: 'The Caravan Magazine',
+    ifa:     'IFA — Unbound & Untethered',
+    gpay:    'Google Pay',
+    product: 'Product Design'
+  };
+
+  window.openProject = function(id) {
+    document.getElementById('main-view').style.display = 'none';
+    document.querySelectorAll('.project-page').forEach(p => {
+      p.classList.remove('pp-visible');
+      p.style.display = 'none';
+    });
+    const page = document.getElementById('pp-' + id);
+    if (!page) return;
+    page.style.display = 'block';
+    page.offsetHeight; // force reflow for animation
+    page.classList.add('pp-visible');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    document.title = projectTitles[id] + ' — Shantashree Nerekar';
+    wireCursor();
+  };
+
+  window.closeProject = function() {
+    document.querySelectorAll('.project-page').forEach(p => {
+      p.classList.remove('pp-visible');
+      p.style.display = 'none';
+    });
+    document.getElementById('main-view').style.display = '';
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    document.title = 'Portfolio — Shantashree Nerekar';
+  };
+
+  /* ── Cursor ── */
+  const cur = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top  = e.clientY + 'px';
+  });
+
+  function wireCursor() {
+    document.querySelectorAll('a, button, .proj, .pp-next').forEach(el => {
+      if (el._cursorWired) return;
+      el._cursorWired = true;
+      el.addEventListener('mouseenter', () => cur.classList.add('big'));
+      el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+    });
+  }
+  wireCursor();
+
+  /* ── Colour reveal on main portfolio ── */
+  document.querySelectorAll('.sec[data-color]').forEach(sec => {
+    const paint = sec.querySelector(':scope > .paint');
+    if (!paint) return;
+    const color = sec.dataset.color;
+    sec.addEventListener('mousemove', e => {
+      const r = sec.getBoundingClientRect();
+      paint.style.background = `radial-gradient(circle 600px at ${e.clientX - r.left}px ${e.clientY - r.top}px, ${color}e0 0%, ${color}90 30%, ${color}00 70%)`;
+    });
+  });
+
+  document.querySelectorAll('.proj').forEach(proj => {
+    const paint = proj.querySelector(':scope > .paint');
+    if (!paint) return;
+    const color = proj.dataset.color || '#f5d76e';
+    proj.addEventListener('mousemove', e => {
+      const r = proj.getBoundingClientRect();
+      paint.style.background = `radial-gradient(circle 420px at ${e.clientX - r.left}px ${e.clientY - r.top}px, ${color}e6 0%, ${color}aa 40%, ${color}00 75%)`;
+      paint.style.opacity = '1';
+    });
+    proj.addEventListener('mouseleave', () => { paint.style.opacity = '0'; });
+  });
+
+  const aboutSec = document.getElementById('about');
+  if (aboutSec) {
+    const paint = document.getElementById('about-paint');
+    const color = aboutSec.dataset.color;
+    aboutSec.addEventListener('mousemove', e => {
+      const r = aboutSec.getBoundingClientRect();
+      paint.style.background = `radial-gradient(circle 650px at ${e.clientX - r.left}px ${e.clientY - r.top}px, ${color}cc 0%, ${color}55 40%, ${color}00 70%)`;
+    });
+  }
+
+  /* ── Colour reveal on "Next Project" strips ── */
+  document.querySelectorAll('.pp-next').forEach(el => {
+    const paint = el.querySelector('.paint');
+    if (!paint) return;
+    el.addEventListener('mousemove', e => {
+      const r = el.getBoundingClientRect();
+      const base = paint.style.background.match(/#[a-f0-9]{6}/i)?.[0] || '#f5d76e';
+      paint.style.background = `radial-gradient(circle 500px at ${e.clientX - r.left}px ${e.clientY - r.top}px, ${base}99 0%, ${base}44 40%, transparent 70%)`;
+      paint.style.opacity = '1';
+    });
+    el.addEventListener('mouseleave', () => { paint.style.opacity = '0'; });
+  });
+
+})();
+</script>
+</body>
+</html>
